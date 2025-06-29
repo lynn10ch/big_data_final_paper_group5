@@ -106,21 +106,13 @@ model4 <- segmented(base_model, seg.Z = ~lrtdis)
 
 **Figures:**
 
-![Figure 1 Yearly Trend](file-HGYkFpr5iheo4tPdP5HkVG)
+**Figures:**
 
-*Figure 1: Yearly Trend of Price per Square Meter*
+![Figure 1: Yearly Trend of Price per Square Meter](Figure1.png)  
+![Figure 2: Distance to LRT vs Unit Price](Figure2.png)  
+![Figure 3: Unit Price by Management Presence](Figure3.png)  
+![Figure 4: Unit Price by Parking Availability](Figure4.png)
 
-![Figure 2 Distance to LRT](file-EqSRPNn4apkYdX1GzuNmY4)
-
-*Figure 2: Distance to LRT vs Unit Price*
-
-![Figure 3 Management Presence](file-Qp6n4rXnhswm2wkY88zJ6X)
-
-*Figure 3: Unit Price by Management Presence*
-
-![Figure 4 Parking Availability](file-82sx1WMBx6p5N14unmWLET)
-
-*Figure 4: Unit Price by Parking Availability*
 
 ## 7. Conclusion
 
