@@ -84,7 +84,7 @@ To ensure the robustness of the regression analysis:
 - **Final Sample Size:** After filtering, **9,642 valid transactions** remained for analysis.
 
 ## 4. Descriptive Statistics
-
+![Descriptive Statistics Table](descriptivestats.png)
 * **Total Price**: Min = NT\$24,397, Max = NT\$243M, Avg = NT\$9.62M (SD = NT\$10.15M)
 * **Building Area**: Min = 0.27 m², Max = 3,095.95 m², Avg = 150.78 m²
 * **Land Area**: Min = 0 m², Max = 1,750 m², Avg = 31.83 m²
@@ -93,29 +93,49 @@ To ensure the robustness of the regression analysis:
 
 ## 5. Methodology
 
-### Model 1: Binary LRT Accessibility
+To examine the relationship between LRT access and housing prices from multiple variables, four models are specified. These models differ in how they operationalize the concept of LRT proximity—either as a binary indicator, a linear distance measure, a nonlinear distance specification, or a segmented (threshold-based) distance function. Each model is described below along with its rationale.
+
+### Model 1: Binary LRT Accessibility Indicator
+
+The first model includes a binary variable `lrt`, which equals 1 if a property is located within 500 meters of an LRT station and 0 otherwise. The model tests whether simply being near a station confers a price premium or discount.
 
 ```r
-lm(`總價` ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrt, data = data)
+model1 <- lm(`總價` ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積  + lrt, data = data)
+summary(model1)
 ```
 
-### Model 2: Linear Distance to LRT
+This approach is intuitive and policy-relevant, commonly used in urban planning studies to assess “walkable access” effects on real estate value.
 
-Estimate marginal effect using `lrtdis` (in meters)
+### Model 2: Linear Distance to LRT (`lrtdis`)
 
-### Model 3: Quadratic Distance Model
+The second model replaces the binary variable with a continuous distance variable `lrtdis` (in meters), representing the direct distance from each property to the nearest LRT station. This specification allows a more nuanced understanding of how distance influences value, assuming the effect is constant across the range.
+
+### Model 3: Quadratic Distance Specification
+
+This model incorporates both `lrtdis` and its squared term `lrtdis^2` to account for potential nonlinear effects:
 
 ```r
-lm(`總價` ~ ... + lrtdis + I(lrtdis^2), data = data)
+model3 <- lm(`總價` ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrtdis + I(lrtdis^2), data = data)
+summary(model3)
 ```
 
-### Model 4: Segmented Regression (Threshold Estimate)
+This formulation allows for a curvature in the price-distance relationship. It is especially relevant when proximity to LRT stations initially increases housing value, but the effect may diminish—or even reverse—beyond a certain range due to externalities such as noise or congestion.
+
+### Model 4: Segmented Regression with Estimated Threshold
+
+This model applies a segmented linear regression approach, using the `segmented` package in R to estimate a structural break point in the relationship between distance and price:
 
 ```r
 library(segmented)
-base_model <- lm(`總價` ~ ... + lrtdis, data = data)
+base_model <- lm(`總價` ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrtdis, data = data)
 model4 <- segmented(base_model, seg.Z = ~lrtdis)
+summary(model4)
+plot(model4)
 ```
+
+This method enables the identification of a distance threshold beyond which the effect of LRT distance on housing price significantly changes.
+
+---
 
 ## 6. Results and Visualization
 
@@ -126,15 +146,21 @@ model4 <- segmented(base_model, seg.Z = ~lrtdis)
 | 3     | Quadratic effect: negative curvature                | 0.6882 |
 | 4     | Breakpoint: 1,518m; stronger negative effect beyond | 0.6885 |
 
-**Figures:**
+To better understand the factors influencing housing prices, we present a series of visualizations based on our dataset:
 
-**Figures:**
 
 ![Figure 1: Yearly Trend of Price per Square Meter](Figure1.png)  
+**Figure 1** shows the yearly trend of average unit prices from Year 106 to 113. A significant price surge is observed after Year 109, indicating possible market shocks or policy effects.
+
 ![Figure 2: Distance to LRT vs Unit Price](Figure2.png)  
+**Figure 2** illustrates the linear relationship between distance to the LRT station and unit price. Properties located farther from the LRT tend to have lower prices, consistent with our regression findings.
+
 ![Figure 3: Unit Price by Management Presence](Figure3.png)  
+**Figure 3** compares unit prices by the presence of a building management organization. Interestingly, properties with management are associated with slightly lower unit prices, possibly due to larger area or different property types.
+
 ![Figure 4: Unit Price by Parking Availability](Figure4.png)
 
+**Figure 4** presents unit prices grouped by parking availability. Homes with parking tend to have higher unit prices, supporting the idea that parking adds significant value to property.
 
 ## 7. Conclusion
 
