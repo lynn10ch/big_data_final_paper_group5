@@ -33,15 +33,15 @@ project-root/
 ├── data/
 │   └── house price data 2.xlsx
 ├── figures/
-│   ├── descriptivestats.png
-│   ├── Figure1.png
-│   ├── Figure2.png
-│   ├── Figure3.png
-│   └── Figure4.png
-├── analysis/
-│   └── housing_analysis.R
-└── results/
-    └── summary_output.txt
+│   ├── descriptivestats
+│   ├── Figure1　shows the yearly trend of average unit prices from Year 106 to 113.
+
+│   ├── Figure2　 illustrates the linear relationship between distance to the LRT station and unit price.
+
+│   ├── Figure3　 compares unit prices by the presence of a building management organization. 
+
+│   └── Figure4　presents unit prices grouped by parking availability. Homes with parking tend to have higher unit prices, supporting the idea that parking adds significant value to property.
+
 ```
 
 ## Analysis
