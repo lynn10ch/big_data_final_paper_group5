@@ -1,143 +1,125 @@
 # Modeling the Impact of Factors on Housing Prices in Qianzhen District, Kaohsiung
 
-**Authors:**
+## Project Description
 
-* 111ZU1059 Chou Yi Lin
-* 112266002 Eric
-* 111405182 Tzu Jui Wang
-* 113266005 TENG Yun
-* 112266009 Sawa Tatsuki
+This project investigates the determinants of housing prices in Kaohsiung’s Qianzhen District using transaction data from 2017 to 2024. We analyze structural and locational variables using multiple regression models, including proximity to Light Rail Transit (LRT), building characteristics, and amenities. The findings are relevant to urban policy, housing affordability, and infrastructure planning.
 
-## 1. Introduction
+## Getting Started
 
-In recent years, housing prices in Taiwan have experienced a rapid and sustained increase, prompting widespread concerns regarding housing affordability and the sustainability of urban development. According to the Ministry of the Interior (MOI), the national housing price index has shown a consistent upward trend since 2017, driven by factors such as persistently low interest rates, speculative investment in real estate, and urban population concentration (MOI, 2024). These developments have disproportionately affected younger and middle-income households, who increasingly find homeownership to be out of reach.
+### Prerequisites
 
-Among the cities undergoing notable transformation, Kaohsiung stands out for its rapid urban redevelopment. In particular, the Qianzhen District has transitioned from a primarily industrial zone into a mixed-use area combining residential, commercial, and public infrastructure. The establishment of transportation facilities such as Light Rail Transit has altered the landscape of the district, potentially reshaping the determinants of housing prices.
+* R (version 4.0 or higher)
+* Required R packages:
 
-This study focuses on identifying the key drivers of housing prices in Qianzhen District by analyzing actual transaction data from 2017 to 2024. Using a multiple linear regression model, we examine the influence of property attributes such as building area, land area, number of rooms, age of the house, and the presence of parking or property management services. The goal is to provide a data-driven assessment of which factors significantly affect the unit price per square meter. The findings are expected to offer practical implications for urban policy, real estate development, and investment decision-making.
+  ```r
+  install.packages(c("readxl", "dplyr", "ggplot2", "segmented"))
+  ```
 
-## 2. Research Problem
+### Data & Setup
 
-The primary aim of this research is to investigate the structural and locational factors that drive housing price variation in Kaohsiung’s Qianzhen District. As housing prices continue to climb, understanding the composition of price determinants becomes increasingly important for ensuring equitable and efficient urban development. This research is motivated by the need to provide empirical evidence on how various features of a property contribute to market value in a rapidly evolving urban environment.
+1. Download the dataset `house price data 2.xlsx` and place it in your working directory.
+2. Set your working directory:
 
-**Core Research Question:**  
+   ```r
+   setwd("~/Desktop/[your-folder]/house")
+   ```
+3. Run the regression analysis and generate output plots using the code in `analysis/housing_analysis.R`.
+
+## File Structure
+
+```
+project-root/
+├── README.md
+├── data/
+│   └── house price data 2.xlsx
+├── figures/
+│   ├── descriptivestats.png
+│   ├── Figure1.png
+│   ├── Figure2.png
+│   ├── Figure3.png
+│   └── Figure4.png
+├── analysis/
+│   └── housing_analysis.R
+└── results/
+    └── summary_output.txt
+```
+
+## Analysis
+
+### Research Problem
+
 Which property-specific factors contribute most significantly to rising housing prices in Qianzhen District?
 
-To answer this question, we analyze a set of key variables, including building area, land area, number of rooms and bathrooms, house age, and whether the property includes amenities such as parking or a management organization. The study employs a multiple linear regression model to estimate the extent to which each factor affects the unit price of housing, while controlling for the effects of other variables.
+We employ four models:
 
-**Specific Objectives:**
+* **Model 1**: Binary LRT accessibility (within 500m)
+* **Model 2**: Continuous LRT distance (`lrtdis`)
+* **Model 3**: Quadratic LRT distance (`lrtdis` + `lrtdis^2`)
+* **Model 4**: Segmented regression estimating a threshold effect
 
-1. To assess the relationship between structural characteristics (e.g., house age, room layout) and housing prices.
-2. To evaluate the impact of additional features such as parking spaces and the presence of management organizations on property values.
-3. To investigate whether traditional price determinants remain significant in an urban district undergoing rapid redevelopment.
-
-By addressing these objectives, this research contributes to a better understanding of price formation mechanisms in urban housing markets and offers guidance for stakeholders including homebuyers, urban planners, and policymakers.
-
----
-
-## 3. Data Description
-
-### 3.1 Data Source and Scope
-
-Property transaction records for this analysis were obtained through the Real Estate Actual Price Registration System (MOI, Taiwan) website, which provides public information on real estate transactions nationwide and records the actual transaction prices. The dataset includes detailed information such as the area of land and building transfer, the number of rooms, house age, and parking availability. This study uses transaction data from **January 2017 to November 2024**, focusing on the Qianzhen District to explore the influence of Kaohsiung's LRT system on residential property prices.
-
-### 3.2 Key Variables
-
-1. **Total Area of Land Transferred**  
-   Expressed in square meters (m²). Larger land areas offer more development potential and tend to increase property value. *Expected coefficient: positive.*
-
-2. **Total Area of Transferred Buildings**  
-   Expressed in square meters (m²). Larger building areas usually increase property value. *Expected coefficient: positive.*
-
-3. **Current Building Layout (Room)**  
-   Number of rooms. More rooms usually raise buyer interest and property value. *Expected coefficient: positive.*
-
-4. **Current Building Layout (Bathroom)**  
-   Number of bathrooms. More bathrooms increase convenience and demand. *Expected coefficient: positive.*
-
-5. **Current Building Layout (Living Room)**  
-   Number of living rooms. Enhances comfort and appeal. *Expected coefficient: positive.*
-
-6. **Age of Estates (age)**  
-   Expressed in years. Older homes may be less desirable. *Expected coefficient: negative.*
-
-7. **Parking Space**  
-   Dummy variable (1 = has parking, 0 = none). Adds convenience and value. *Expected coefficient: positive.*
-
-8. **Management Organization**  
-   Dummy variable (1 = present, 0 = absent). Enhances quality and security. *Expected coefficient: positive.*
-
-9. **Availability of Light Rail Transit Stations**  
-   Dummy variable (1 = within 500m, 0 = outside). Improves accessibility. *Expected coefficient: positive.*
-
-10. **Distance from Light Rail Transit Stations**  
-    Expressed in meters. May be nonlinear in effect. *Expected coefficient: uncertain (positive or negative).*
-
-### 3.3 Data Processing
-
-To ensure the robustness of the regression analysis:
-
-- **Outlier Removal:** Extreme cases (e.g., >1.4 billion NTD or >400 rooms) were excluded.
-- **Missing Values:** Replaced with zeros.
-- **Dummy Variables:** Created for parking and management presence.
-- **Geocoding:** Transaction addresses were transformed into XY coordinates.
-- **Final Sample Size:** After filtering, **9,642 valid transactions** remained for analysis.
-
-## 4. Descriptive Statistics
-![Descriptive Statistics Table](descriptivestats.png)
-* **Total Price**: Min = NT\$24,397, Max = NT\$243M, Avg = NT\$9.62M (SD = NT\$10.15M)
-* **Building Area**: Min = 0.27 m², Max = 3,095.95 m², Avg = 150.78 m²
-* **Land Area**: Min = 0 m², Max = 1,750 m², Avg = 31.83 m²
-* **Rooms**: Avg = 3, Max = 15
-* **Age**: Min = 0, Max = 72, Avg = 24 years
-
-## 5. Methodology
-
-To examine the relationship between LRT access and housing prices from multiple variables, four models are specified. These models differ in how they operationalize the concept of LRT proximity—either as a binary indicator, a linear distance measure, a nonlinear distance specification, or a segmented (threshold-based) distance function. Each model is described below along with its rationale.
-
-### Model 1: Binary LRT Accessibility Indicator
-
-The first model includes a binary variable `lrt`, which equals 1 if a property is located within 500 meters of an LRT station and 0 otherwise. The model tests whether simply being near a station confers a price premium or discount.
+### Sample R Code for Analysis
 
 ```r
-model1 <- lm(`總價` ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積  + lrt, data = data)
-summary(model1)
-```
-
-This approach is intuitive and policy-relevant, commonly used in urban planning studies to assess “walkable access” effects on real estate value.
-
-### Model 2: Linear Distance to LRT (`lrtdis`)
-
-The second model replaces the binary variable with a continuous distance variable `lrtdis` (in meters), representing the direct distance from each property to the nearest LRT station. This specification allows a more nuanced understanding of how distance influences value, assuming the effect is constant across the range.
-
-### Model 3: Quadratic Distance Specification
-
-This model incorporates both `lrtdis` and its squared term `lrtdis^2` to account for potential nonlinear effects:
-
-```r
-model3 <- lm(`總價` ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrtdis + I(lrtdis^2), data = data)
-summary(model3)
-```
-
-This formulation allows for a curvature in the price-distance relationship. It is especially relevant when proximity to LRT stations initially increases housing value, but the effect may diminish—or even reverse—beyond a certain range due to externalities such as noise or congestion.
-
-### Model 4: Segmented Regression with Estimated Threshold
-
-This model applies a segmented linear regression approach, using the `segmented` package in R to estimate a structural break point in the relationship between distance and price:
-
-```r
+library(dplyr)
+library(readxl)
+library(ggplot2)
 library(segmented)
-base_model <- lm(`總價` ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrtdis, data = data)
+
+# Set working directory
+setwd("~/Desktop/[your-folder]/house")
+
+# Load dataset
+data <- read_excel("house price data 2.xlsx")
+
+# Model 1
+model1 <- lm(總價 ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrt, data = data)
+summary(model1)
+
+# Model 2
+model2 <- lm(總價 ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrtdis, data = data)
+summary(model2)
+
+# Model 3
+model3 <- lm(總價 ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrtdis + I(lrtdis^2), data = data)
+summary(model3)
+
+# Model 4
+base_model <- lm(總價 ~ 房 + 廳 + 衛 + 車位 + 有無管理組織 + 屋齡 + 土地移轉面積 + 建物移轉面積 + lrtdis, data = data)
 model4 <- segmented(base_model, seg.Z = ~lrtdis)
 summary(model4)
 plot(model4)
 ```
 
-This method enables the identification of a distance threshold beyond which the effect of LRT distance on housing price significantly changes.
+### Data Visualization
 
----
+Additional plots include:
 
-## 6. Results and Visualization
+```r
+# Yearly price trend
+house_price_data_2_ %>%
+  group_by(交易年) %>%
+  summarise(avg_price = mean(單價元平方公尺, na.rm = TRUE)) %>%
+  ggplot(aes(x = as.numeric(交易年), y = avg_price)) +
+  geom_line(color = "steelblue") +
+  labs(title = "Yearly Trend", x = "Year", y = "Avg Price/m²")
+
+# Boxplot by building type
+ggplot(house_price_data_2_, aes(x = 建物型態, y = 單價元平方公尺)) +
+  geom_boxplot(fill = "lightblue") +
+  coord_flip()
+
+# Scatter: floor vs. price
+ggplot(house_price_data_2_, aes(x = 樓層, y = 單價元平方公尺)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm")
+
+# Scatter: building area vs. price
+ggplot(house_price_data_2_, aes(x = 建物移轉面積, y = 單價元平方公尺)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "loess")
+```
+
+## Results
 
 | Model | Key Finding                                         | R²     |
 | ----- | --------------------------------------------------- | ------ |
@@ -146,31 +128,27 @@ This method enables the identification of a distance threshold beyond which the 
 | 3     | Quadratic effect: negative curvature                | 0.6882 |
 | 4     | Breakpoint: 1,518m; stronger negative effect beyond | 0.6885 |
 
-To better understand the factors influencing housing prices, we present a series of visualizations based on our dataset:
+## Conclusion
 
+* Building and land area positively affect price.
+* Older houses are less valued.
+* Parking availability adds value.
+* Management presence slightly reduces price (possibly due to building type).
+* Proximity to LRT strongly increases property value (especially within 1.5km).
 
-![Figure 1: Yearly Trend of Price per Square Meter](Figure1.png)  
-**Figure 1** shows the yearly trend of average unit prices from Year 106 to 113. A significant price surge is observed after Year 109, indicating possible market shocks or policy effects.
+## Contributors
 
-![Figure 2: Distance to LRT vs Unit Price](Figure2.png)  
-**Figure 2** illustrates the linear relationship between distance to the LRT station and unit price. Properties located farther from the LRT tend to have lower prices, consistent with our regression findings.
+* **111ZU1059 Chou Yi Lin** — Data Processing
+* **112266002 Eric** — Data Cleaning
+* **111405182 Tzu Jui Wang** — Model Design
+* **113266005 TENG Yun** — Visualization & Interpretation
+* **112266009 Sawa Tatsuki** — Documentation & Integration
 
-![Figure 3: Unit Price by Management Presence](Figure3.png)  
-**Figure 3** compares unit prices by the presence of a building management organization. Interestingly, properties with management are associated with slightly lower unit prices, possibly due to larger area or different property types.
+## Acknowledgments
 
-![Figure 4: Unit Price by Parking Availability](Figure4.png)
-
-**Figure 4** presents unit prices grouped by parking availability. Homes with parking tend to have higher unit prices, supporting the idea that parking adds significant value to property.
-
-## 7. Conclusion
-
-* Building and land area positively affect prices.
-* Age of property negatively affects price.
-* Parking strongly increases price.
-* Management presence has a slight negative effect, possibly due to property type.
-* LRT proximity significantly increases value, especially within 1.5km range.
+We sincerely thank the Ministry of the Interior (Taiwan) for providing open-access real estate transaction data, and our course instructors for their guidance and feedback.
 
 ## References
 
-* Ministry of the Interior. (2024). Real Estate Price Index. [https://pip.moi.gov.tw](https://pip.moi.gov.tw)
+* Ministry of the Interior. (2024). *Real Estate Price Index*. [https://pip.moi.gov.tw](https://pip.moi.gov.tw)
 * Rosen, S. (1974). *Hedonic prices and implicit markets: Product differentiation in pure competition*. *Journal of Political Economy*, 82(1), 34–55.
