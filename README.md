@@ -18,48 +18,70 @@ This study focuses on identifying the key drivers of housing prices in Qianzhen 
 
 ## 2. Research Problem
 
-The primary aim of this research is to investigate the structural and locational factors that drive housing price variation in Kaohsiung’s Qianzhen District. As housing prices continue to climb, understanding the composition of price determinants becomes increasingly important for ensuring equitable and efficient urban development.
+The primary aim of this research is to investigate the structural and locational factors that drive housing price variation in Kaohsiung’s Qianzhen District. As housing prices continue to climb, understanding the composition of price determinants becomes increasingly important for ensuring equitable and efficient urban development. This research is motivated by the need to provide empirical evidence on how various features of a property contribute to market value in a rapidly evolving urban environment.
 
-**Core research question:**
+**Core Research Question:**  
+Which property-specific factors contribute most significantly to rising housing prices in Qianzhen District?
 
-* Which property-specific factors contribute most significantly to rising housing prices in Qianzhen District?
+To answer this question, we analyze a set of key variables, including building area, land area, number of rooms and bathrooms, house age, and whether the property includes amenities such as parking or a management organization. The study employs a multiple linear regression model to estimate the extent to which each factor affects the unit price of housing, while controlling for the effects of other variables.
 
-**Objectives:**
+**Specific Objectives:**
 
 1. To assess the relationship between structural characteristics (e.g., house age, room layout) and housing prices.
 2. To evaluate the impact of additional features such as parking spaces and the presence of management organizations on property values.
 3. To investigate whether traditional price determinants remain significant in an urban district undergoing rapid redevelopment.
 
+By addressing these objectives, this research contributes to a better understanding of price formation mechanisms in urban housing markets and offers guidance for stakeholders including homebuyers, urban planners, and policymakers.
+
+---
+
 ## 3. Data Description
 
 ### 3.1 Data Source and Scope
 
-* Source: Real Estate Actual Price Registration System (MOI, Taiwan)
-* Period: January 2017 to November 2024
-* Data include: land and building areas, number of rooms, age of property, parking, management, and LRT proximity
+Property transaction records for this analysis were obtained through the Real Estate Actual Price Registration System (MOI, Taiwan) website, which provides public information on real estate transactions nationwide and records the actual transaction prices. The dataset includes detailed information such as the area of land and building transfer, the number of rooms, house age, and parking availability. This study uses transaction data from **January 2017 to November 2024**, focusing on the Qianzhen District to explore the influence of Kaohsiung's LRT system on residential property prices.
 
 ### 3.2 Key Variables
 
-| Variable        | Description                          | Expected Effect |
-| --------------- | ------------------------------------ | --------------- |
-| Land Area       | Size of transferred land in m²       | Positive        |
-| Building Area   | Usable floor space in m²             | Positive        |
-| Rooms           | Number of rooms                      | Positive        |
-| Bathrooms       | Number of bathrooms                  | Positive        |
-| Living Rooms    | Number of living rooms               | Positive        |
-| Age             | Age of the house in years            | Negative        |
-| Parking         | Dummy (1 = has parking, 0 = no)      | Positive        |
-| Management      | Dummy (1 = exists, 0 = none)         | Positive        |
-| LRT (500m)      | Dummy (1 = within 500m, 0 = outside) | Positive        |
-| Distance to LRT | Continuous distance in meters        | Ambiguous       |
+1. **Total Area of Land Transferred**  
+   Expressed in square meters (m²). Larger land areas offer more development potential and tend to increase property value. *Expected coefficient: positive.*
+
+2. **Total Area of Transferred Buildings**  
+   Expressed in square meters (m²). Larger building areas usually increase property value. *Expected coefficient: positive.*
+
+3. **Current Building Layout (Room)**  
+   Number of rooms. More rooms usually raise buyer interest and property value. *Expected coefficient: positive.*
+
+4. **Current Building Layout (Bathroom)**  
+   Number of bathrooms. More bathrooms increase convenience and demand. *Expected coefficient: positive.*
+
+5. **Current Building Layout (Living Room)**  
+   Number of living rooms. Enhances comfort and appeal. *Expected coefficient: positive.*
+
+6. **Age of Estates (age)**  
+   Expressed in years. Older homes may be less desirable. *Expected coefficient: negative.*
+
+7. **Parking Space**  
+   Dummy variable (1 = has parking, 0 = none). Adds convenience and value. *Expected coefficient: positive.*
+
+8. **Management Organization**  
+   Dummy variable (1 = present, 0 = absent). Enhances quality and security. *Expected coefficient: positive.*
+
+9. **Availability of Light Rail Transit Stations**  
+   Dummy variable (1 = within 500m, 0 = outside). Improves accessibility. *Expected coefficient: positive.*
+
+10. **Distance from Light Rail Transit Stations**  
+    Expressed in meters. May be nonlinear in effect. *Expected coefficient: uncertain (positive or negative).*
 
 ### 3.3 Data Processing
 
-* Removed outliers (e.g., > NT\$1.4B or > 400 rooms)
-* Replaced NA values with 0
-* Created dummy variables for parking and management
-* Converted addresses to XY coordinates; removed unrecognized ones
-* Final sample size: 9,642 valid transactions
+To ensure the robustness of the regression analysis:
+
+- **Outlier Removal:** Extreme cases (e.g., >1.4 billion NTD or >400 rooms) were excluded.
+- **Missing Values:** Replaced with zeros.
+- **Dummy Variables:** Created for parking and management presence.
+- **Geocoding:** Transaction addresses were transformed into XY coordinates.
+- **Final Sample Size:** After filtering, **9,642 valid transactions** remained for analysis.
 
 ## 4. Descriptive Statistics
 
