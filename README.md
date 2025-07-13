@@ -140,7 +140,8 @@ ggplot(house_price_data_2_, aes(x = 建物移轉面積, y = 單價元平方公�
 
 * **111ZU1059 Chou Yi Lin** — Data Processing
 * **112266002 Eric** — Data Cleaning
-* **111405182 Tzu Jui Wang** — Model Design&Data Dnanlysis& coder& To Do List PM/Writer
+* **111405182 Tzu Jui Wang** — Model Design
+* & Data Dnanlysis & Coder & To Do List PM/Writer
 * **113266005 TENG Yun** — Visualization & Interpretation
 * **112266009 Sawa Tatsuki** — Documentation & Integration
 
